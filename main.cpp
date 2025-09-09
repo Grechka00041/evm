@@ -9,6 +9,19 @@ union db{
     double numberDouble;
 };
 
+template <typename T>
+T checkedInput(T const floor = numeric_limits<T>::min(), T const ceiling = numeric_limits<T>::max()) {
+    T num;
+    cin >> num;
+    while (cin.fail() || cin.peek() != '\n' || num > ceiling || num < floor) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Введите корректное значение: ";
+        cin >> num;
+    }
+    return num;
+}
+
 void binaryDouble(union db numberDouble) {
 
     unsigned int mask = 1 << 31;
@@ -37,7 +50,7 @@ void binaryUnsignedInt(unsigned int num) {
     for (int i = 0; i < size; i++) {
         putchar(num & mask ? '1' : '0');
         mask >>= 1;
-        if (i % 8 == 0 || i == 31) {
+        if ((i + 1) % 8 == 0) {
             putchar(' ');
         }
     }
@@ -46,7 +59,7 @@ void binaryUnsignedInt(unsigned int num) {
 
 void changeBitsUnsignedInt(unsigned int num, int numOfBitsForChange, int firstBit) {
     int value;
-    for (int i = 1; i <= numOfBitsForChange; i++) {
+    for (int i = 0; i < numOfBitsForChange; i++) {
         cout << "Введите значение бита(0 или 1)";
         cin >> value;
         while (value !=0 && value != 1) {
@@ -54,18 +67,19 @@ void changeBitsUnsignedInt(unsigned int num, int numOfBitsForChange, int firstBi
             cin >> value;
         }
         if (value == 1) {
-            num = num << (firstBit + i);
+            num += pow(2, firstBit + i);
         }
         if (value == 0) {
-            num = num >> (firstBit + i);
+            num -= pow(2, firstBit + i);
         }
     }
     binaryUnsignedInt(num);
 }
 
 void changeBitsDouble(union db numberDouble, int numOfBitsForChange, int firstBit) {
+
     int value;
-    for (int i = 1; i <= numOfBitsForChange; i++) {
+    for (int i = 0; i < numOfBitsForChange; i++) {
         cout << "Введите значение бита(0 или 1)";
         cin >> value;
         while (value !=0 && value != 1) {
@@ -73,19 +87,18 @@ void changeBitsDouble(union db numberDouble, int numOfBitsForChange, int firstBi
             cin >> value;
         }
         if (value == 1) {
-                numberDouble.Double[1] = numberDouble.Double[1] << (firstBit + i);
+                numberDouble.Double[0] += pow(2, firstBit + i);
         }
         if (value == 0) {
-                numberDouble.Double[1] = numberDouble.Double[1] >> (firstBit + i);
+                numberDouble.Double[0] -= pow(2, firstBit + i);
         }
-
-        binaryDouble(numberDouble);
     }
-
+    binaryDouble(numberDouble);
 
 }
 
 int main() {
+
     SetConsoleOutputCP(CP_UTF8);
 
     db numD;
@@ -93,23 +106,23 @@ int main() {
     int numOfBitsForChange, firstBit, value;
 
     cout << "Введите число типа double:";
-    cin >> numD.numberDouble;
+    numD.numberDouble = checkedInput<double>();
     binaryDouble(numD);
 
     cout << "Введите число типа unsigned int:";
-    cin >> numUI;
+    numUI = checkedInput<unsigned int>();
     binaryUnsignedInt(numUI);
 
     cout << "Изменение unsigned int\n";
     cout << "Введите номер младшего бита для изменения: ";
-    cin >> firstBit;
-    while (firstBit > sizeof(unsigned int)*8 & firstBit < 0) {
+    firstBit = checkedInput<int>();
+    while ((firstBit >= sizeof(unsigned int)*8) || (firstBit < 0)) {
         cout << "Введите корректное значение: ";
         cin >> firstBit;
     }
 
     cout << "Введите кол-во битов для изменения: ";
-    cin >> numOfBitsForChange;
+    numOfBitsForChange = checkedInput<int>();
     while (numOfBitsForChange > sizeof(unsigned int)*8) {
         cout << "Введите корректное значение: ";
         cin >> numOfBitsForChange;
@@ -118,15 +131,14 @@ int main() {
 
     cout << "Изменение double\n";
     cout << "Введите номер младшего бита для изменения: ";
-    cin >> firstBit;
-    cin >> firstBit;
-    while (firstBit > sizeof(unsigned int)*8 & firstBit < 0) {
+    firstBit = checkedInput<int>();
+    while ((firstBit >= sizeof(unsigned int)*8) || (firstBit < 0)) {
         cout << "Введите корректное значение: ";
         cin >> firstBit;
     }
 
     cout << "Введите кол-во битов для изменения: ";
-    cin >> numOfBitsForChange;
+    numOfBitsForChange = checkedInput<int>();
     while (numOfBitsForChange > sizeof(unsigned int)*8) {
         cout << "Введите корректное значение: ";
         cin >> numOfBitsForChange;
