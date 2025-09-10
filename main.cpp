@@ -6,7 +6,7 @@
 using namespace std;
 
 union db{
-    unsigned int Double[2];
+    uint64_t bits;
     double numberDouble;
 };
 
@@ -23,22 +23,16 @@ T checkedInput(T const floor = numeric_limits<T>::min(), T const ceiling = numer
     return num;
 }
 
-void binaryDouble(union db numberDouble) {
-
-    unsigned int mask = 1 << 31;
-    int size = sizeof(double) * 8;
+void binaryDouble(db& numberDouble) {
+    const int size = sizeof(uint64_t) * 8;
+    uint64_t mask = static_cast<uint64_t>(1) << (size - 1);
     cout << "Ваше число в памяти компьютера выглядит так: ";
     for (int i = 0; i <= size; ++i) {
-        putchar(numberDouble.Double[1] & mask ? '1' : '0');
+        putchar(numberDouble.bits & mask ? '1' : '0');
         mask >>= 1;
         if (i == 0 || i == 11) {
             putchar(' ');
         }
-    }
-    mask = 1 << 31;
-    for (int i = 0; i <= size; ++i) {
-        putchar(numberDouble.Double[0] & mask ? '1' : '0');
-        mask >>= 1;
     }
     cout << endl;
 }
@@ -61,6 +55,7 @@ void binaryUnsignedInt(unsigned int num) {
 void changeBitsUnsignedInt(unsigned int num, int numOfBitsForChange, int firstBit) {
     int value;
     for (int i = 0; i < numOfBitsForChange; i++) {
+        int bitPosition = firstBit + i;
         cout << "Введите значение бита(0 или 1)";
         cin >> value;
         while (value !=0 && value != 1) {
@@ -68,19 +63,22 @@ void changeBitsUnsignedInt(unsigned int num, int numOfBitsForChange, int firstBi
             cin >> value;
         }
         if (value == 1) {
-            num |= 1 << (firstBit + i);
+            num |= 1 << (bitPosition);
         }
-        if (value == 0) {
-            num &= ~(1 << (firstBit + i));
+        else{
+            num &= ~(1 << (bitPosition));
         }
     }
     binaryUnsignedInt(num);
 }
 
-void changeBitsDouble(union db numberDouble, int numOfBitsForChange, int firstBit) {
 
+void changeBitsDouble(db& numberDouble, int numOfBitsForChange, int firstBit) {
+    uint64_t mask;
     int value;
     for (int i = 0; i < numOfBitsForChange; i++) {
+        int bitPosition = firstBit + i;
+        mask = static_cast<uint64_t>(1) << bitPosition;
         cout << "Введите значение бита(0 или 1)";
         cin >> value;
         while (value !=0 && value != 1) {
@@ -88,11 +86,11 @@ void changeBitsDouble(union db numberDouble, int numOfBitsForChange, int firstBi
             cin >> value;
         }
         if (value == 1) {
-            numberDouble.Double[0] |= 1 << (firstBit + i);
+            numberDouble.bits |= mask;
+        } else {
+            numberDouble.bits &= ~mask;
         }
-        if (value == 0) {
-            numberDouble.Double[0] &= ~(1 << (firstBit + i));
-        }
+
     }
     binaryDouble(numberDouble);
 
@@ -110,7 +108,7 @@ int main() {
     numD.numberDouble = checkedInput<double>();
     binaryDouble(numD);
 
-   /* cout << "Введите число типа unsigned int:";
+    cout << "Введите число типа unsigned int:";
     numUI = checkedInput<unsigned int>();
     binaryUnsignedInt(numUI);
 
@@ -129,7 +127,7 @@ int main() {
         cin >> numOfBitsForChange;
     }
     changeBitsUnsignedInt(numUI, numOfBitsForChange, firstBit);
-            */
+
     cout << "Изменение double\n";
     cout << "Введите номер младшего бита для изменения: ";
     firstBit = checkedInput<int>();
