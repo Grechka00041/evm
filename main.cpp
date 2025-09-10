@@ -138,7 +138,7 @@ int main() {
 
     cout << "Введите кол-во битов для изменения: ";
     numOfBitsForChange = checkedInput<int>();
-    while (numOfBitsForChange > sizeof(unsigned int)*8) {
+    while (numOfBitsForChange > sizeof(double)*8) {
         cout << "Введите корректное значение: ";
         cin >> numOfBitsForChange;
     }
