@@ -1,4 +1,5 @@
 #include <cmath>
+#include <cstdint>
 #include <iostream>
 #include "windows.h"
 
@@ -67,10 +68,10 @@ void changeBitsUnsignedInt(unsigned int num, int numOfBitsForChange, int firstBi
             cin >> value;
         }
         if (value == 1) {
-            num += pow(2, firstBit + i);
+            num |= 1 << (firstBit + i);
         }
         if (value == 0) {
-            num -= pow(2, firstBit + i);
+            num &= ~(1 << (firstBit + i));
         }
     }
     binaryUnsignedInt(num);
@@ -87,10 +88,10 @@ void changeBitsDouble(union db numberDouble, int numOfBitsForChange, int firstBi
             cin >> value;
         }
         if (value == 1) {
-                numberDouble.Double[0] += pow(2, firstBit + i);
+            numberDouble.Double[0] |= 1 << (firstBit + i);
         }
         if (value == 0) {
-                numberDouble.Double[0] -= pow(2, firstBit + i);
+            numberDouble.Double[0] &= ~(1 << (firstBit + i));
         }
     }
     binaryDouble(numberDouble);
@@ -109,7 +110,7 @@ int main() {
     numD.numberDouble = checkedInput<double>();
     binaryDouble(numD);
 
-    cout << "Введите число типа unsigned int:";
+   /* cout << "Введите число типа unsigned int:";
     numUI = checkedInput<unsigned int>();
     binaryUnsignedInt(numUI);
 
@@ -128,11 +129,11 @@ int main() {
         cin >> numOfBitsForChange;
     }
     changeBitsUnsignedInt(numUI, numOfBitsForChange, firstBit);
-
+            */
     cout << "Изменение double\n";
     cout << "Введите номер младшего бита для изменения: ";
     firstBit = checkedInput<int>();
-    while ((firstBit >= sizeof(unsigned int)*8) || (firstBit < 0)) {
+    while ((firstBit >= sizeof(double)*8) || (firstBit < 0)) {
         cout << "Введите корректное значение: ";
         cin >> firstBit;
     }
@@ -144,6 +145,5 @@ int main() {
         cin >> numOfBitsForChange;
     }
     changeBitsDouble(numD, numOfBitsForChange, firstBit);
-
     return 0;
 }
