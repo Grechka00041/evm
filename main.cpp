@@ -142,6 +142,6 @@ int main() {
         cout << "Введите корректное значение: ";
         cin >> numOfBitsForChange;
     }
-    changeBitsDouble(numD, numOfBitsForChange, firstBit);
+    changeBitsDouble(numD, numOfBitsForChange, firstBit-1);
     return 0;
 }
