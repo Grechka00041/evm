@@ -27,7 +27,7 @@ void binaryDouble(db& numberDouble) {
     const int size = sizeof(uint64_t) * 8;
     uint64_t mask = static_cast<uint64_t>(1) << (size - 1);
     cout << "Ваше число в памяти компьютера выглядит так: ";
-    for (int i = 0; i <= size; ++i) {
+    for (int i = 0; i < size; ++i) {
         putchar(numberDouble.bits & mask ? '1' : '0');
         mask >>= 1;
         if (i == 0 || i == 11) {
@@ -77,7 +77,7 @@ void changeBitsDouble(db& numberDouble, int numOfBitsForChange, int firstBit) {
     uint64_t mask;
     int value;
     for (int i = 0; i < numOfBitsForChange; i++) {
-        int bitPosition = firstBit + i;
+        int bitPosition = firstBit + i + 1;
         mask = static_cast<uint64_t>(1) << bitPosition;
         cout << "Введите значение бита(0 или 1)";
         cin >> value;
@@ -105,11 +105,12 @@ int main() {
     int numOfBitsForChange, firstBit, value;
 
     cout << "Введите число типа double:";
-    numD.numberDouble = checkedInput<double>();
+    cin >> numD.numberDouble;
+    //numD.numberDouble = checkedInput<double>();
     binaryDouble(numD);
 
     cout << "Введите число типа unsigned int:";
-    numUI = checkedInput<unsigned int>();
+    cin >> numUI;
     binaryUnsignedInt(numUI);
 
     cout << "Изменение unsigned int\n";
