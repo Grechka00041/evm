@@ -9,6 +9,12 @@ int code() {
     return r.h.al;
 }
 
+void init() {
+    union REGS r;
+    r.x.ax = 0;
+    int86(0x33, &r, &r);
+}
+
 int pressed() {
     union REGS r;
     r.h.ah = 0x0B;
@@ -16,21 +22,15 @@ int pressed() {
     return r.h.al;
 }
 
-void init() {
+void lock() {
     union REGS r;
-    r.x.ax = 0;
+    r.x.ax = 2;
     int86(0x33, &r, &r);
 }
 
 void unlock() {
     union REGS r;
     r.x.ax = 1;
-    int86(0x33, &r, &r);
-}
-
-void lock() {
-    union REGS r;
-    r.x.ax = 2;
     int86(0x33, &r, &r);
 }
 
